@@ -26,6 +26,10 @@ jobs:
         with:
             name: config.json
             json: ${{ secrets.CONFIG_JSON }}
+      
+      - name: Perform Shell command
+        run: ls -la
+        shell: bash
         
       - name: Run test script
         run: node test-script.js
