@@ -1,0 +1,23 @@
+{
+  "name": "githubworkflowtest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test-script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snande3/githubWorkflowTest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/snande3/githubWorkflowTest/issues"
+  },
+  "homepage": "https://github.com/snande3/githubWorkflowTest#readme",
+  "dependencies": {
+    "oracledb": "^6.3.0",
+    "winston": "^3.11.0"
+  }
+}
