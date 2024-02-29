@@ -1,9 +1,6 @@
 name: Run Test Script
 
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
   build:
@@ -30,6 +27,6 @@ jobs:
       - name: Perform Shell command
         run: ls -la
         shell: bash
-        
+
       - name: Run test script
         run: node test-script.js
