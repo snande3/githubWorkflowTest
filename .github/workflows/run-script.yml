@@ -1,0 +1,31 @@
+name: Run Test Script
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create Config
+        uses: jsdaniell/create-json@1.1.2
+        with:
+            name: config.json
+            json: ${{ secrets.CONFIG_JSON }}
+        
+      - name: Run test script
+        run: node test-script.js
