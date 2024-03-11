@@ -38,3 +38,40 @@ jobs:
 
       - name: Run test script
         run: node test-script.js
+
+  build1:
+    runs-on: ubuntu-latest
+    if: ${{false}}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create Config
+        uses: jsdaniell/create-json@1.1.2
+        with:
+            name: config1.json
+            json: ${{ secrets.CONFIG_JSON }}
+      - name: Verify the Config is present and exit the workflow if it is not
+        run: |
+          if [ ! -f config.json ]; then
+              echo "::error::Config file is not present"
+              exit 1
+          fi
+        shell: bash
+
+      - name: Perform Shell command
+        run: ls -la
+        shell: bash
+
+
+      - name: Run test script
+        run: node test-script.js
