@@ -41,7 +41,7 @@ jobs:
 
   build1:
     runs-on: ubuntu-latest
-    if: ${{vars.FLAG}}
+    if: ${{vars.FLAG == 'true'}}
 
     steps:
       - name: Checkout code
