@@ -1,26 +1,24 @@
 name: Update Version History
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - dev
 
 jobs:
   update-version-history:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Get the pull request number
-      id: pr
-      run: echo "::set-output name=PR_NUMBER::$(jq -r '.number' < "${{ github.event_path }}")"
-      
     - name: Get the first comment of the pull request
       id: comment
       run: |
-        PR_NUMBER=${{ steps.pr.outputs.PR_NUMBER }}
+        PR_NUMBER=${{ github.event.pull_request.number }}
         COMMENTS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments")
         FIRST_COMMENT=$(echo "$COMMENTS" | jq -r '.[0].body')
         echo "::set-output name=COMMENT::${FIRST_COMMENT}"
@@ -34,11 +32,11 @@ jobs:
 
     - name: Append comment to Version History
       run: |
-        echo "${{ steps.comment.outputs.COMMENT }}" >> "Version.md"
+        echo "${{ steps.comment.outputs.COMMENT }}" >> "Version History.md"
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add "Version History.md"
-        git commit -m "Update Version History with PR #${{ steps.pr.outputs.PR_NUMBER }} comment"
+        git commit -m "Update Version History with PR #${{ github.event.pull_request.number }} comment"
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
