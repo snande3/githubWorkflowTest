@@ -9,3 +9,5 @@ const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 console.log('COnfigs:', config);
 
 console.log('Hello World');
+
+console.log('Hello World');
