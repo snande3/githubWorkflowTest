@@ -12,16 +12,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Get the first comment of the pull request
-      id: comment
-      run: |
-        PR_NUMBER=${{ github.event.pull_request.number }}
-        COMMENTS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments")
-        FIRST_COMMENT=$(echo "$COMMENTS" | jq -r '.[0].body')
-        echo "::set-output name=COMMENT::${FIRST_COMMENT}"
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        ref: 'dev'
+        fetch-depth: 0 # Fetch all history for all tags and branches
+
+    - name: Get PR first comment
+      id: first_comment
+      uses: octokit/request-action@v2.x
+      with:
+        route: GET /repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments
+        mediaType: '{ previews: ["machine-man"] }'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
+
+    - name: Extract first comment
+      run: |
+        COMMENT_BODY=$(echo '${{ steps.first_comment.outputs.data }}' | jq -r '.[0].body')
+        echo "FIRST_COMMENT=$COMMENT_BODY" >> $GITHUB_ENV
+
     - name: Checkout the wiki
       uses: actions/checkout@v2
       with:
@@ -32,10 +43,11 @@ jobs:
 
     - name: Append comment to Version History
       run: |
-        echo "${{ steps.comment.outputs.COMMENT }}" >> "Version History.md"
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add "Version History.md"
+        echo "${{ env.FIRST_COMMENT }}" >> wiki/Version-History.md
+        cd wiki
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add Version-History.md
         git commit -m "Update Version History with PR #${{ github.event.pull_request.number }} comment"
         git push
       env:
