@@ -22,7 +22,7 @@ jobs:
 
     - name: Clone Wiki
       run: |
-        git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}/wiki.git wiki
+        git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
 
     - name: Append PR description to Version History
       run: |
