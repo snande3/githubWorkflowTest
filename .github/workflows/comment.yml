@@ -28,6 +28,7 @@ jobs:
         repository: ${{ github.repository }}.wiki
         token: ${{ secrets.GITHUB_TOKEN }}
         path: wiki
+        ref: 'main'
 
     - name: Append comment to Version History
       run: |
